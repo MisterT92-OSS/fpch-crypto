@@ -128,7 +128,7 @@ def fpch_hash512(message: bytes, master_seed: bytes = b'\x00' * 32) -> bytes:
 # ── Demo ──────────────────────────────────────────────────────────────────────
 def demo():
     print("=" * 70)
-    print("FPCH-512 V5 — Conforme au papier v8")
+    print("FPCH-512 V5 — Conforme au FPCH ")
     print("=" * 70)
 
     # Vérification IV
