@@ -722,11 +722,11 @@ def main():
     print(test_suite.generate_report())
     
     # Sauvegarder
-    test_suite.save_report("/Users/toufiksalem/.openclaw/workspace/fpch_test_report.txt")
+    test_suite.save_report("fpch_test_report.txt")
     
     # Sauvegarder aussi en JSON
     results_json = [asdict(r) for r in test_suite.results]
-    with open("/Users/toufiksalem/.openclaw/workspace/fpch_test_results.json", 'w') as f:
+    with open("fpch_test_results.json", 'w') as f:
         json.dump({
             "timestamp": datetime.now().isoformat(),
             "tester": "FPCH Validation Suite",
