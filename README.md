@@ -1,60 +1,57 @@
-# FPCH - Function of Chaotic Hyperbolic Permutation
-## By Toufik Salem | Par Toufik Salem
+# FPCH — Function of Chaotic Hyperbolic Permutation
 
-**An Invitation to Cryptanalysis | Une Invitation à la Cryptanalyse**
+**By Toufik Salem | An Invitation to Cryptanalysis**
 
----
-
-## 🎯 Main Implementation | Implémentation Principale
-
-```bash
-python3 fpch_main.py    # Recommandé / Recommended
-```
+> ⚠️ Experimental research. Do not use in production without community validation.
 
 ---
 
-## 📁 All Versions | Toutes les Versions
-
-| File | Description EN | Description FR | Status |
-|------|----------------|----------------|--------|
-| **`fpch_v5.py`** | **Version 5** - 100% paper compliant (512-bit, HKDF, 8 lanes) | **Version 5** - 100% conforme au papier (512-bit, HKDF, 8 lanes) | ✅ **Recommended / Recommandée** |
-| **`fpch_main.py`** | Main implementation (balanced) - simplified 64-bit | Implémentation principale (équilibrée) - 64-bit simplifié | 🔧 Legacy / Ancienne |
-| **`fpch_v4.py`** | Exact formula with all fixes | Formule exacte avec tous les correctifs | ✅ Functional / Fonctionnelle |
-| `fpch_paper_v8_final.pdf` | Academic paper (9 pages) | Papier académique (9 pages) | 📄 Publication |
-
----
-
-## 🚀 Quick Start | Démarrage Rapide
+## 🎯 Reference Implementation
 
 ```bash
 git clone https://github.com/MisterT92-OSS/fpch-crypto.git
 cd fpch-crypto
-python3 fpch_main.py
+python3 fpch_v5.py # 100% paper-compliant (512-bit, HKDF, 8 lanes)
 ```
 
 ---
 
-## 🎬 Videos | Vidéos
+## 📁 Files
 
-- `fpch_demo_final.mp4` (FR, 3 min)
-- `fpch_demo_final_en.mp4` (EN, 3 min)
+| File | Description | Status |
+|---|---|---|
+| `fpch_v5.py` | **512-bit, HKDF, 8 lanes — exact paper implementation** | ✅ **Reference** |
+| `fpch_v4.py` | 64-bit, all formula fixes applied | 🔧 Intermediate |
+| `fpch_main.py` | Earlier version (bits=60, not paper-compliant) | ⚠️ Legacy |
+| `FPCH_Paper.pdf` | Academic paper (9 pages) | 📄 Publication |
+| `cuda/` | GPU implementation (RTX 4090 benchmark) | 🚧 Experimental |
+
+---
+
+## 📐 Core Formula (Definition 3.1)
+
+```
+P(x) = floor( (⌊√D⌋₁₂₈ · x² >> 64 + α·x + β) / (x + γ) ) mod 2⁶⁴
+```
+
+Where D ∈ D⁺₆₄ (first 64 positive fundamental discriminants).
+
+---
+
+## 🔬 Invite Cryptanalysis
+
+We explicitly invite:
+- Algebraic attacks (Gröbner basis)
+- Differential cryptanalysis
+- Lane-wise attacks (8 independent lanes)
+- Weak key analysis
+
+→ Open an [Issue](https://github.com/MisterT92-OSS/fpch-crypto/issues) or email toufik.salem.perso@pm.me
 
 ---
 
 ## 📧 Contact
 
-**Toufik Salem**
-- Email: toufik.salem.perso@pm.me
-- GitHub: https://github.com/MisterT92-OSS/fpch-crypto
+**Toufik Salem** — toufik.salem.perso@pm.me
 
----
-
-## ⚠️ Disclaimer | Avertissement
-
-**EN**: Experimental research. Do not use in production without community validation.
-
-**FR**: Recherche expérimentale. Ne pas utiliser en production sans validation communautaire.
-
----
-
-*May 2026 | Mai 2026*
+*May 2026*
