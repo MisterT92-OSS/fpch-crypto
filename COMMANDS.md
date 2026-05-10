@@ -54,7 +54,7 @@ Tests NIST SP 800-22:
 ```bash
 cd ~
 eval "$(/usr/libexec/path_helper)"
-cd ~/.openclaw/workspace
+cd /chemin/vers/votre/workspace
 pdflatex fpch_paper_v8_final.tex
 ```
 
