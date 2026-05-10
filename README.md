@@ -6,36 +6,41 @@
 
 ---
 
-## 🎯 Reference Implementation
+## 🎯 Quick Start
 
 ```bash
 git clone https://github.com/MisterT92-OSS/fpch-crypto.git
 cd fpch-crypto
-python3 fpch_v5.py # 100% paper-compliant (512-bit, HKDF, 8 lanes)
+python3 fpch_v6.py  # Recommended (47.9% avalanche)
+python3 fpch_v5.py  # Paper reference (4.7% avalanche)
 ```
 
 ---
 
-## 📁 Files
+## 📁 Versions
 
-| File | Description | Status |
+| File | Avalanche | Description |
 |---|---|---|
-| `fpch_v6.py` | **Cross-lane diffusion, division-free, 47.9% avalanche** | ✅ **Recommended V6** |
-| `fpch_v5.py` | 512-bit, HKDF, 8 lanes — paper compliant (4.7% avalanche) | 📄 Academic Reference |
-| `fpch_v4.py` | 64-bit, all formula fixes applied | 🔧 Intermediate |
-| `fpch_main.py` | Earlier version (bits=60, not paper-compliant) | ⚠️ Legacy |
-| `FPCH_Paper.pdf` | Academic paper (12 pages, includes V6 section) | 📄 Publication |
-| `cuda/` | GPU implementation (RTX 4090 benchmark) | 🚧 Experimental |
+| `fpch_v6.py` | **47.9%** | Cross-lane diffusion, division-free (recommended) |
+| `fpch_v5.py` | 4.7% | 100% paper-compliant (academic reference) |
+| `fpch_v4.py` | 55.5% | Intermediate version |
+| `fpch_working.py` | 42% | Simplified working version |
+| `fpch_main.py` | 54.7% | Legacy (not paper-compliant) |
 
 ---
 
-## 📐 Core Formula (Definition 3.1)
+## 📐 Core Formula (V5)
 
 ```
 P(x) = floor( (⌊√D⌋₁₂₈ · x² >> 64 + α·x + β) / (x + γ) ) mod 2⁶⁴
 ```
 
-Where D ∈ D⁺₆₄ (first 64 positive fundamental discriminants).
+## 📐 V6 Improvements
+
+- Cross-lane mixing after each round
+- Division-free permutation (multiplication + XOR)
+- MurmurHash-style non-linearity
+- Golden ratio constant
 
 ---
 
@@ -48,6 +53,15 @@ We explicitly invite:
 - Weak key analysis
 
 → Open an [Issue](https://github.com/MisterT92-OSS/fpch-crypto/issues) or email toufik.salem.perso@pm.me
+
+---
+
+## 📄 Paper
+
+`FPCH_Paper.pdf` (12 pages) includes:
+- Sections 1-6: FPCH V5 specification
+- Section 7: FPCH V6 proposed improvements
+- Threat model, security analysis, open problems
 
 ---
 
