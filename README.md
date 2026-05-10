@@ -1,35 +1,60 @@
 # FPCH - Function of Chaotic Hyperbolic Permutation
+## By Toufik Salem | Par Toufik Salem
 
-**An Invitation to Cryptanalysis**
+**An Invitation to Cryptanalysis | Une Invitation à la Cryptanalyse**
 
-FPCH is a cryptographic hash function exploring chaotic dynamics in real quadratic fields using exact integer arithmetic.
+---
 
-## 🚀 Quick Start
+## 🎯 Main Implementation | Implémentation Principale
 
 ```bash
-# Cloner le repo
-git clone https://github.com/MisterT92-OSS/fpch-crypto.git
-cd fpch-crypto
-
-# Lancer la démo
-python3 fpch_demo.py
-
-# Voir le papier
-open FPCH_Paper.pdf  # Mac
+python3 fpch_main.py    # Recommandé / Recommended
 ```
 
-## 📄 Ressources
+---
 
-| Fichier | Description |
-|---------|-------------|
-| [FPCH_Paper.pdf](FPCH_Paper.pdf) | Papier académique (9 pages) |
-| [COMMANDS.md](COMMANDS.md) | Guide des commandes complet |
-| [fpch_demo_v2.mp4](fpch_demo_v2.mp4) | Vidéo de démonstration (2 min) |
+## 📁 All Versions | Toutes les Versions
+
+| File | Description EN | Description FR | Status |
+|------|----------------|----------------|--------|
+| **`fpch_main.py`** | Main implementation (balanced) | Implémentation principale (équilibrée) | ✅ **Recommended** |
+| **`fpch_v5.py`** | 100% paper compliant (512-bit, HKDF, 8 lanes) | 100% conforme au papier (512-bit, HKDF, 8 lanes) | 📄 Academic reference |
+| **`fpch_v4.py`** | Exact formula with all fixes | Formule exacte avec tous les correctifs | ✅ Functional |
+| `fpch_paper_v8_final.pdf` | Academic paper (9 pages) | Papier académique (9 pages) | 📄 Publication |
+
+---
+
+## 🚀 Quick Start | Démarrage Rapide
+
+```bash
+git clone https://github.com/MisterT92-OSS/fpch-crypto.git
+cd fpch-crypto
+python3 fpch_main.py
+```
+
+---
+
+## 🎬 Videos | Vidéos
+
+- `fpch_demo_final.mp4` (FR, 3 min)
+- `fpch_demo_final_en.mp4` (EN, 3 min)
+
+---
 
 ## 📧 Contact
 
-Toufik Salem - toufik.salem.perso@pm.me
+**Toufik Salem**
+- Email: toufik.salem.perso@pm.me
+- GitHub: https://github.com/MisterT92-OSS/fpch-crypto
 
-## ⚠️ Disclaimer
+---
 
-Experimental research work. Do not use in production without thorough cryptanalytic review.
+## ⚠️ Disclaimer | Avertissement
+
+**EN**: Experimental research. Do not use in production without community validation.
+
+**FR**: Recherche expérimentale. Ne pas utiliser en production sans validation communautaire.
+
+---
+
+*May 2026 | Mai 2026*
