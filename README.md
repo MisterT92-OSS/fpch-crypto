@@ -17,9 +17,9 @@ python3 fpch_main.py    # Recommandé / Recommended
 
 | File | Description EN | Description FR | Status |
 |------|----------------|----------------|--------|
-| **`fpch_main.py`** | Main implementation (balanced) | Implémentation principale (équilibrée) | ✅ **Recommended** |
-| **`fpch_v5.py`** | 100% paper compliant (512-bit, HKDF, 8 lanes) | 100% conforme au papier (512-bit, HKDF, 8 lanes) | 📄 Academic reference |
-| **`fpch_v4.py`** | Exact formula with all fixes | Formule exacte avec tous les correctifs | ✅ Functional |
+| **`fpch_v5.py`** | **Version 5** - 100% paper compliant (512-bit, HKDF, 8 lanes) | **Version 5** - 100% conforme au papier (512-bit, HKDF, 8 lanes) | ✅ **Recommended / Recommandée** |
+| **`fpch_main.py`** | Main implementation (balanced) - simplified 64-bit | Implémentation principale (équilibrée) - 64-bit simplifié | 🔧 Legacy / Ancienne |
+| **`fpch_v4.py`** | Exact formula with all fixes | Formule exacte avec tous les correctifs | ✅ Functional / Fonctionnelle |
 | `fpch_paper_v8_final.pdf` | Academic paper (9 pages) | Papier académique (9 pages) | 📄 Publication |
 
 ---
