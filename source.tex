@@ -68,7 +68,19 @@ We do \textbf{not} claim to have solved this problem. Rather, we present:
     \item An explicit invitation to the cryptanalytic community to break it
 \end{enumerate}
 
-\subsection{Related Work}
+\subsection{Threat Model}\label{sec:threat}
+
+We consider three attacker profiles:
+
+\begin{description}
+    \item[Classical Attacker] Has access to the hash function as a black box, can query adaptively, and possesses standard computational resources (CPU clusters). Goal: find collisions, preimages, or distinguish FPCH from a random oracle.
+    
+    \item[GPU Attacker] Exploits the parallel nature of the compression function. With 8 independent lanes, a GPU attacker might attempt lane-wise parallelization of attacks, reducing effective security from $2^{512}$ to $8 \times 2^{64}$ if lanes can be attacked independently.
+    
+    \item[Quantum Attacker (Limited)] Possesses a quantum computer capable of running Grover's algorithm ($O(2^{n/2})$ for search) but \textbf{not} Shor's algorithm (which requires group structure). FPCH's rational map structure is not a group, providing weak resistance against quantum preimage attacks via Grover.
+\end{description}
+
+\textbf{Important:} We do \textbf{not} claim post-quantum security in the standard model. The structural resistance to Shor's algorithm is a design feature, not a proven security property.
 
 \textbf{Chaos-based cryptography:} Matthews \cite{matthews1989} pioneered chaotic encryption. Pareek et al. \cite{pareek2003} explored discrete chaotic cryptography. Alvarez and Li \cite{alvarez2006} provided critical analysis of common failures. \textbf{FPCH attempts to address their critiques} regarding floating-point precision and weak security arguments.
 
@@ -204,7 +216,78 @@ After 6 rounds, each output bit depends on all input bits with $\geq 99\%$ proba
     \item \textbf{No provable post-quantum security} --- only structural resistance to Shor
     \item \textbf{No memory-hardness} --- vulnerable to custom hardware
     \item \textbf{No side-channel resistance} --- timing analysis not performed
+    \item \textbf{Lane independence = potential weakness:} The 8-lane parallel architecture could reduce effective security from $2^{512}$ to $8 \times 2^{64}$ if lanes can be attacked independently. This is a \textbf{serious structural limitation} that any cryptanalyst should examine first.
+    \item \textbf{Not a PRF (Pseudorandom Function):} FPCH is a hash function, not a keyed PRF. We make no claims about indistinguishability from random when used with secret keys.
+    \item \textbf{Not indifferentiable:} We do not claim indifferentiability from a random oracle in the sense of Maurer et al. The construction may have detectable artifacts.
+    \item \textbf{No formal security proof:} All security claims are heuristic/conjectural based on empirical testing.
+    \item \textbf{Single-author, unreviewed:} No peer review, no external validation, no formal verification.
 \end{itemize}
+
+\subsection{FPCH Architecture: The 8-Lane Construction}
+
+Figure~\ref{fig:architecture} illustrates FPCH's parallel compression structure. The 512-bit state is split into 8 independent 64-bit lanes, each processed by the chaotic permutation $P(x)$ before final XOR mixing. This parallel design enables GPU efficiency but introduces the lane-independence weakness.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.85]
+    % Input
+    \node[draw, fill=blue!10, minimum width=6cm, minimum height=0.8cm] (input) at (0,4) {Input Message $M$};
+    
+    % Padding
+    \node[draw, fill=blue!5, minimum width=6cm, minimum height=0.6cm] (pad) at (0,3.2) {Merkle-Damgård Padding};
+    
+    % Lane split
+    \node[draw, fill=orange!10, minimum width=1.3cm, minimum height=0.5cm] (l0) at (-3.2,2) {$L_0$};
+    \node[draw, fill=orange!10, minimum width=1.3cm, minimum height=0.5cm] (l1) at (-1.6,2) {$L_1$};
+    \node[draw, fill=orange!10, minimum width=1.3cm, minimum height=0.5cm] (l2) at (0,2) {$L_2$};
+    \node[draw, fill=orange!10, minimum width=1.3cm, minimum height=0.5cm] (l3) at (1.6,2) {$L_3$};
+    \node[draw, fill=orange!10, minimum width=1.3cm, minimum height=0.5cm] (l4) at (3.2,2) {...};
+    
+    % Lane labels
+    \node[font=\scriptsize] at (-3.2,2.5) {Lane 0};
+    \node[font=\scriptsize] at (-1.6,2.5) {Lane 1};
+    \node[font=\scriptsize] at (0,2.5) {Lane 2};
+    \node[font=\scriptsize] at (1.6,2.5) {Lane 3};
+    \node[font=\scriptsize] at (3.2,2.5) {Lane 7};
+    
+    % Permutation boxes
+    \node[draw, fill=green!15, minimum width=1.4cm, minimum height=0.8cm] (p0) at (-3.2,0.8) {$P(x)$};
+    \node[draw, fill=green!15, minimum width=1.4cm, minimum height=0.8cm] (p1) at (-1.6,0.8) {$P(x)$};
+    \node[draw, fill=green!15, minimum width=1.4cm, minimum height=0.8cm] (p2) at (0,0.8) {$P(x)$};
+    \node[draw, fill=green!15, minimum width=1.4cm, minimum height=0.8cm] (p3) at (1.6,0.8) {$P(x)$};
+    \node[draw, fill=green!15, minimum width=1.4cm, minimum height=0.8cm] (p4) at (3.2,0.8) {$P(x)$};
+    
+    % XOR mixing
+    \node[draw, fill=red!15, minimum width=2cm, minimum height=0.6cm] (mix) at (0,-0.5) {XOR Mixing};
+    
+    % Output
+    \node[draw, fill=blue!10, minimum width=6cm, minimum height=0.8cm] (output) at (0,-1.8) {512-bit Hash Output};
+    
+    % Arrows
+    \draw[->] (input) -- (pad);
+    \draw[->] (pad) -- (-3.2,2.7) -- (l0);
+    \draw[->] (pad) -- (-1.6,2.7) -- (l1);
+    \draw[->] (pad) -- (0,2.7) -- (l2);
+    \draw[->] (pad) -- (1.6,2.7) -- (l3);
+    \draw[->] (pad) -- (3.2,2.7) -- (l4);
+    
+    \draw[->] (l0) -- (p0);
+    \draw[->] (l1) -- (p1);
+    \draw[->] (l2) -- (p2);
+    \draw[->] (l3) -- (p3);
+    \draw[->] (l4) -- (p4);
+    
+    \draw[->] (p0) -- (p0 |- mix.north);
+    \draw[->] (p1) -- (p1 |- mix.north);
+    \draw[->] (p2) -- (p2 |- mix.north);
+    \draw[->] (p3) -- (p3 |- mix.north);
+    \draw[->] (p4) -- (p4 |- mix.north);
+    
+    \draw[->] (mix) -- (output);
+\end{tikzpicture}
+\caption{FPCH Architecture: 8 parallel 64-bit lanes with chaotic permutation $P(x)$ applied independently to each lane, followed by XOR mixing. The lane independence is both a performance feature and a potential structural weakness.}
+\label{fig:architecture}
+\end{figure}
 
 \section{Experimental Results and Limitations}
 
