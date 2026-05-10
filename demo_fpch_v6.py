@@ -29,7 +29,7 @@ def demo():
     
     # Auteur
     print(f"\n{Y}Auteur: Toufik Salem{RESET}")
-    print(f"{G}GitHub: github.com/MisterT92-OSS/fpch-crypto{RESET}")
+    print(f"{G}GitHub: github.com/toufiksalem/fpch-crypto{RESET}")
     time.sleep(1.5)
     
     # Introduction
@@ -161,7 +161,7 @@ def demo():
     print(f"\n{BOLD}{C}╔══════════════════════════════════════════════════════════════╗{RESET}")
     print(f"{BOLD}{C}║                    CONTACT & RESSOURCES                       ║{RESET}")
     print(f"{BOLD}{C}╚══════════════════════════════════════════════════════════════╝{RESET}")
-    print(f"\n{G}GitHub:   github.com/MisterT92-OSS/fpch-crypto{RESET}")
+    print(f"\n{G}GitHub:   github.com/toufiksalem/fpch-crypto{RESET}")
     print(f"{G}Email:    toufik.salem.perso@pm.me{RESET}")
     print(f"{G}Papier:   FPCH_Paper.pdf (12 pages){RESET}")
     print(f"\n{Y}Venez casser FPCH ! 🛠️{RESET}\n")

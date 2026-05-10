@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.5.10)  10 MAY 2026 20:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.5.10)  10 MAY 2026 21:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -653,8 +653,7 @@ File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ef
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count345
-)
-No file source.aux.
+) (./source.aux)
 \openout1 = `source.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
@@ -675,6 +674,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 31.
 LaTeX Font Info:    ... okay on input line 31.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 31.
 LaTeX Font Info:    ... okay on input line 31.
+
 (/usr/local/texlive/2026basic/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count346
@@ -700,12 +700,14 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 Package hyperref Info: Link coloring OFF on input line 31.
+ (./source.out) (./source.out)
 \@outlinefile=\write4
 \openout4 = `source.out'.
 
 LaTeX Font Info:    Trying to load font information for U+msa on input line 34.
 
- (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsa.fd
+
+(/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 34.
@@ -714,19 +716,10 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 34.
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (2.01561pt too wide) in paragraph at lines 42--43
-[]\T1/cmr/bx/n/10 Code: []$\T1/cmtt/m/n/10 https : / / github . com / MisterT92
--[]OSS / fpch-[]crypto$[] \T1/cmr/m/n/10 (com-
+Overfull \hbox (5.45909pt too wide) in paragraph at lines 42--43
+[]\T1/cmr/bx/n/10 Code: []$\T1/cmtt/m/n/10 https : / / github . com / toufiksal
+em / fpch-[]crypto$[] \T1/cmr/m/n/10 (com-mit:
  []
-
-
-LaTeX Warning: Citation `alvarez2006' on page 1 undefined on input line 53.
-
-
-LaTeX Warning: Citation `li2003' on page 1 undefined on input line 54.
-
-
-LaTeX Warning: Citation `alvarez2006' on page 1 undefined on input line 55.
 
 [1
 
@@ -736,48 +729,14 @@ Overfull \hbox (3.98404pt too wide) in paragraph at lines 78--79
 re-sources (CPU
  []
 
-
-LaTeX Warning: Citation `matthews1989' on page 2 undefined on input line 87.
-
-
-LaTeX Warning: Citation `pareek2003' on page 2 undefined on input line 87.
-
-
-LaTeX Warning: Citation `alvarez2006' on page 2 undefined on input line 87.
-
-[2]
-
-LaTeX Warning: Citation `courtois2003' on page 3 undefined on input line 89.
-
-
-LaTeX Warning: Citation `biham1991' on page 3 undefined on input line 91.
-
-
-LaTeX Warning: Citation `nist2015' on page 3 undefined on input line 93.
-
-
-LaTeX Warning: Citation `nist2024' on page 3 undefined on input line 93.
-
-[3]
+[2] [3]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 128.
- [4]
-
-LaTeX Warning: Citation `courtois2003' on page 5 undefined on input line 206.
-
-[5]
-
-LaTeX Warning: Citation `biham1991' on page 6 undefined on input line 207.
-
-
+ [4] [5]
 Overfull \hbox (9.72516pt too wide) in paragraph at lines 224--225
 []\T1/cmr/bx/n/10.95 No for-mal se-cu-rity proof: \T1/cmr/m/n/10.95 All se-cu-r
 ity claims are heuris-tic/conjectural
  []
-
-
-LaTeX Warning: Reference `fig:architecture' on page 6 undefined on input line 2
-30.
 
 [6] [7] [8] [9]
 Overfull \hbox (5.50774pt too wide) in paragraph at lines 430--430
@@ -794,27 +753,14 @@ Overfull \hbox (1.92685pt too wide) in paragraph at lines 495--495
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package rerunfilecheck Warning: File `source.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `source.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  971F6044190D939E2EBD5AA9E0274090;5638.
+Package rerunfilecheck Info: File `source.out' has not changed.
+(rerunfilecheck)             Checksum: 971F6044190D939E2EBD5AA9E0274090;5638.
  ) 
 Here is how much of TeX's memory you used:
- 21521 strings out of 469006
- 394027 string characters out of 5454813
- 777318 words of memory out of 5000000
- 49753 multiletter control sequences out of 15000+600000
+ 21560 strings out of 469006
+ 394577 string characters out of 5454813
+ 778820 words of memory out of 5000000
+ 49786 multiletter control sequences out of 15000+600000
  648597 words of font info for 92 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  84i,10n,104p,543b,730s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -824,8 +770,8 @@ ppen/ec/ectt1095.600pk> </Users/toufiksalem/Library/texlive/2026basic/texmf-var
 e/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk> </Users/toufi
 ksalem/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0900
 .600pk> </Users/toufiksalem/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour
-/jknappen/ec/ecti1095.600pk> </Users/toufiksalem/Library/texlive/2026basic/texm
-f-var/fonts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </Users/toufiksalem/Library/t
+/jknappen/ec/ecbx1095.600pk> </Users/toufiksalem/Library/texlive/2026basic/texm
+f-var/fonts/pk/ljfour/jknappen/ec/ecti1095.600pk> </Users/toufiksalem/Library/t
 exlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1095.600pk> </Users/
 toufiksalem/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknappen/ec/ecb
 x1200.600pk> </Users/toufiksalem/Library/texlive/2026basic/texmf-var/fonts/pk/l
@@ -847,10 +793,10 @@ sfonts/cm/cmr8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/
 public/amsfonts/symbols/msbm10.pfb>
-Output written on source.pdf (12 pages, 284842 bytes).
+Output written on source.pdf (12 pages, 285453 bytes).
 PDF statistics:
- 865 PDF objects out of 1000 (max. 8388607)
- 277 compressed objects within 3 object streams
+ 963 PDF objects out of 1000 (max. 8388607)
+ 381 compressed objects within 4 object streams
  112 named destinations out of 1000 (max. 500000)
- 13 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 253 words of extra memory for PDF output out of 10000 (max. 10000000)
 

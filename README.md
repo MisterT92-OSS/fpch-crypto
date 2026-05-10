@@ -1,15 +1,36 @@
 # FPCH — Function of Chaotic Hyperbolic Permutation
 
-**By Toufik Salem | An Invitation to Cryptanalysis**
+**A cryptographic hash function based on real quadratic fields**
 
-> ⚠️ Experimental research. Do not use in production without community validation.
+**Author:** Toufik Salem (Independent Researcher)
+**Paper:** FPCH_Paper.pdf (12 pages)
+**Status:** Invitation to Cryptanalysis — Experimental
+
+---
+
+## Overview
+
+FPCH explores whether the irrationality of quadratic surds can provide a foundation for chaos-based hashing when implemented with exact integer arithmetic.
+
+While chaos-based hash functions and quadratic-field cryptography have been studied separately, their combination in an integer-only construction appears unexplored. FPCH proposes this novel combination.
+
+---
+
+## 🔬 Research Status
+
+This is an **invitation to cryptanalysis**. We make no claims of provable security. We explicitly invite:
+- Algebraic attacks (Gröbner basis)
+- Differential cryptanalysis
+- Lane-wise attacks (reducing 2⁵¹² to 8×2⁶⁴)
+- Weak key analysis
+- Preimage attacks
 
 ---
 
 ## 🎯 Quick Start
 
 ```bash
-git clone https://github.com/MisterT92-OSS/fpch-crypto.git
+git clone https://github.com/toufiksalem/fpch-crypto.git
 cd fpch-crypto
 python3 fpch_v6.py  # Recommended (47.9% avalanche)
 python3 fpch_v5.py  # Paper reference (4.7% avalanche)
@@ -52,7 +73,7 @@ We explicitly invite:
 - Lane-wise attacks (8 independent lanes)
 - Weak key analysis
 
-→ Open an [Issue](https://github.com/MisterT92-OSS/fpch-crypto/issues) or email toufik.salem.perso@pm.me
+→ Open an [Issue](https://github.com/toufiksalem/fpch-crypto/issues) or email toufik.salem.perso@pm.me
 
 ---
 
