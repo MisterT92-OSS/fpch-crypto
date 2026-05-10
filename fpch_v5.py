@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FPCH V5 - Conforme au papier FPCH v8
+FPCH V5 - Conforme au FPCH 
 Toufik Salem
 """
 import math
