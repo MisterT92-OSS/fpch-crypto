@@ -1,0 +1,78 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{alvarez2006}
+\citation{li2003}
+\citation{alvarez2006}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction and Motivation}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}The Problem}{1}{subsection.1.1}\protected@file@percent }
+\citation{matthews1989}
+\citation{pareek2003}
+\citation{alvarez2006}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Our Approach}{2}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Threat Model}{2}{subsection.1.3}\protected@file@percent }
+\newlabel{sec:threat}{{1.3}{2}{Threat Model}{subsection.1.3}{}}
+\citation{courtois2003}
+\citation{biham1991}
+\citation{nist2015}
+\citation{nist2024}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Mathematical Background}{3}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Real Quadratic Fields}{3}{subsection.2.1}\protected@file@percent }
+\newlabel{def:disc}{{2.1}{3}{Fundamental Discriminant}{definition.2.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}FPCH Construction}{4}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Core Function}{4}{subsection.3.1}\protected@file@percent }
+\newlabel{def:fpch}{{3.1}{4}{FPCH Layer}{definition.3.1}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces FPCH Single Layer (Integer Arithmetic)}}{4}{algorithm.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Parameter Generation via HKDF}{4}{subsection.3.2}\protected@file@percent }
+\newlabel{def:params}{{3.2}{4}{FPCH Parameters}{definition.3.2}{}}
+\citation{courtois2003}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Complete Hash Function}{5}{subsection.3.3}\protected@file@percent }
+\newlabel{def:hash512}{{3.3}{5}{FPCH-512 Hash Function}{definition.3.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Empirical Security Analysis}{5}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Avalanche: Empirical Evidence}{5}{subsection.4.1}\protected@file@percent }
+\newlabel{conj:avalanche}{{4.1}{5}{Avalanche Property}{conjecture.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Diffusion: Empirical Evidence}{5}{subsection.4.2}\protected@file@percent }
+\newlabel{conj:diffusion}{{4.2}{5}{Diffusion Completeness}{conjecture.4.2}{}}
+\citation{biham1991}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Explicit Invitation to Cryptanalysis}{6}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Attacks We Invite}{6}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}What We Do Not Claim}{6}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}FPCH Architecture: The 8-Lane Construction}{7}{subsection.5.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces FPCH Architecture: 8 parallel 64-bit lanes with chaotic permutation $P(x)$ applied independently to each lane, followed by XOR mixing. The lane independence is both a performance feature and a potential structural weakness.}}{7}{figure.1}\protected@file@percent }
+\newlabel{fig:architecture}{{1}{7}{FPCH Architecture: 8 parallel 64-bit lanes with chaotic permutation $P(x)$ applied independently to each lane, followed by XOR mixing. The lane independence is both a performance feature and a potential structural weakness}{figure.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Experimental Results and Limitations}{7}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}NIST Statistical Tests}{7}{subsection.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces NIST SP 800-22 results. Test 5 (Longest Run) was close to threshold (0.089), suggesting potential periodicity that warrants investigation.}}{7}{table.1}\protected@file@percent }
+\newlabel{tab:nist}{{1}{7}{NIST SP 800-22 results. Test 5 (Longest Run) was close to threshold (0.089), suggesting potential periodicity that warrants investigation}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Performance Claims (Preliminary)}{8}{subsection.6.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Performance claims require independent verification. Source code available for reproduction.}}{8}{table.2}\protected@file@percent }
+\newlabel{tab:perf}{{2}{8}{Performance claims require independent verification. Source code available for reproduction}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Acknowledged Limitations}{8}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}FPCH V6: Security Improvements (Proposed)}{8}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Motivation for V6}{8}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Cross-Lane Diffusion}{9}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Division-Free Permutation}{9}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Enhanced Non-Linearity}{9}{subsection.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Avalanche Improvement}{9}{subsection.7.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Avalanche effect comparison: 1-bit input change, 512-bit output.}}{9}{table.3}\protected@file@percent }
+\newlabel{tab:avalanche}{{3}{9}{Avalanche effect comparison: 1-bit input change, 512-bit output}{table.3}{}}
+\bibcite{shor1994}{1}
+\bibcite{bernstein2009}{2}
+\bibcite{cohen1993}{3}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}Security Analysis of V6}{10}{subsection.7.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion: A Request for Cryptanalytic Scrutiny}{10}{section.8}\protected@file@percent }
+\bibcite{matthews1989}{4}
+\bibcite{guo2014}{5}
+\bibcite{kocarev2001}{6}
+\bibcite{alvarez2006}{7}
+\bibcite{pareek2003}{8}
+\bibcite{courtois2003}{9}
+\bibcite{biham1991}{10}
+\bibcite{aumasson2020}{11}
+\bibcite{nist2015}{12}
+\bibcite{nist2024}{13}
+\bibcite{krawczyk2010}{14}
+\bibcite{li2003}{15}
+\@writefile{toc}{\contentsline {section}{\numberline {A}The First 64 Positive Fundamental Discriminants}{12}{appendix.A}\protected@file@percent }
+\gdef \@abspage@last{12}
