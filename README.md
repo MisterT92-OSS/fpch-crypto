@@ -30,7 +30,7 @@ This is an **invitation to cryptanalysis**. We make no claims of provable securi
 ## 🎯 Quick Start
 
 ```bash
-git clone https://github.com/toufiksalem/fpch-crypto.git
+git clone https://github.com/MisterT92-OSS/fpch-crypto.git
 cd fpch-crypto
 python3 fpch_v6.py  # Recommended (47.9% avalanche)
 python3 fpch_v5.py  # Paper reference (4.7% avalanche)
@@ -73,7 +73,7 @@ We explicitly invite:
 - Lane-wise attacks (8 independent lanes)
 - Weak key analysis
 
-→ Open an [Issue](https://github.com/toufiksalem/fpch-crypto/issues) or email toufik.salem.perso@pm.me
+→ Open an [Issue](https://github.com/MisterT92-OSS/fpch-crypto/issues) or email toufik.salem.perso@pm.me
 
 ---
 
