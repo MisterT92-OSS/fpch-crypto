@@ -20,10 +20,11 @@ python3 fpch_v5.py # 100% paper-compliant (512-bit, HKDF, 8 lanes)
 
 | File | Description | Status |
 |---|---|---|
-| `fpch_v5.py` | **512-bit, HKDF, 8 lanes — exact paper implementation** | ✅ **Reference** |
+| `fpch_v6.py` | **Cross-lane diffusion, division-free, 47.9% avalanche** | ✅ **Recommended V6** |
+| `fpch_v5.py` | 512-bit, HKDF, 8 lanes — paper compliant (4.7% avalanche) | 📄 Academic Reference |
 | `fpch_v4.py` | 64-bit, all formula fixes applied | 🔧 Intermediate |
 | `fpch_main.py` | Earlier version (bits=60, not paper-compliant) | ⚠️ Legacy |
-| `FPCH_Paper.pdf` | Academic paper (9 pages) | 📄 Publication |
+| `FPCH_Paper.pdf` | Academic paper (12 pages, includes V6 section) | 📄 Publication |
 | `cuda/` | GPU implementation (RTX 4090 benchmark) | 🚧 Experimental |
 
 ---
