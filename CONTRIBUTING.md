@@ -17,7 +17,7 @@
 
 ## Reference Implementation
 
-Always use `fpch_v5.py` — it is the only paper-compliant implementation.
+Always use `fpch_v6.py` for new analyses — it is the recommended, division-free, cross-lane design. Use `fpch_v5.py` only if you are reproducing the original paper's V5 results.
 
 ## Contact
 

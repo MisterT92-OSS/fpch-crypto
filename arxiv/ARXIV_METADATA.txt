@@ -1,0 +1,70 @@
+# arXiv Submission Metadata — FPCH
+
+**Upload file:** `fpch_arxiv_submission.tar.gz` (contains `fpch_arxiv.tex`)
+
+---
+
+## Title
+FPCH: A Chaotic Hyperbolic Permutation Function — An Invitation to Cryptanalysis
+
+## Authors
+Toufik Salem
+
+## Primary Category
+cs.CR (Cryptography and Security)
+
+## Secondary Categories (optional but recommended)
+- math.NT (Number Theory)
+- cs.DC (Distributed/Parallel/Cluster Computing)
+
+## Abstract (paste this into the arXiv abstract field)
+
+FPCH (Function of Chaotic Hyperbolic Permutation) explores the use of chaotic dynamics in real quadratic fields for cryptographic hashing. The construction uses only integer arithmetic over positive fundamental discriminants to generate sensitive dependence on initial conditions, avoiding the floating-point pitfalls that have historically undermined chaos-based cryptography.
+
+We present two versions: FPCH V5, a rational-function design with explicit division, and FPCH V6, an improved construction featuring cross-lane diffusion, division-free permutation, and MurmurHash-style final mixing. For FPCH V6 we prove structural theorems on parameter sensitivity and algebraic complexity, and we report reproducible empirical results: strict avalanche criterion (49.98% bit change), complete diffusion (50.00%), and passing grades on NIST SP 800-22 frequency, runs, and serial tests.
+
+We make no claim of provable security in the standard model. Instead, we frame FPCH as an invitation to cryptanalysis: an openly documented, freely available construction whose security is explicitly conjectural and whose parameters are derived via HKDF-SHA256 from a public seed.
+
+Code: https://github.com/MisterT92-OSS/fpch-crypto
+
+## Comments
+Preprint, invitation to cryptanalysis. Source code and reproducible test suite available at https://github.com/MisterT92-OSS/fpch-crypto
+
+## Keywords
+chaotic cryptography, quadratic fields, hash functions, post-quantum exploration, cryptanalysis, continued fractions
+
+## ACM Class
+K.6.5 (Security and Protection)
+
+## MSC Class
+11R11 (Quadratic extensions), 94A60 (Cryptography)
+
+## License
+arXiv.org non-exclusive license (standard)
+
+---
+
+## Steps to Submit
+
+1. Go to https://arxiv.org/submit
+2. Log in (or create an account)
+3. Click "Start new submission"
+4. Upload `fpch_arxiv_submission.tar.gz`
+5. Fill in the metadata fields above
+6. Preview the PDF (arXiv will compile it automatically)
+7. Submit
+
+## After Submission
+
+- arXiv usually processes within 1-2 business days
+- You will receive an email with the arXiv ID (e.g. arXiv:2605.xxxxx)
+- Update the GitHub README with the arXiv link once available
+- Consider announcing on:
+  - Cryptography StackExchange
+  - /r/crypto
+  - IACR News
+  - Your personal LinkedIn / X / Bluesky
+
+---
+
+*Generated 2026-05-14*

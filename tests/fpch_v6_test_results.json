@@ -1,0 +1,72 @@
+{
+  "timestamp": "2026-05-14T17:19:00.610129",
+  "algorithm": "FPCH-512 V6",
+  "samples": {
+    "avalanche": 2000,
+    "diffusion": 500,
+    "nist_bits": 1000000,
+    "collision": 50000
+  },
+  "results": [
+    {
+      "name": "Determinism",
+      "p_value": 1.0,
+      "passed": true,
+      "detail": "equal=True"
+    },
+    {
+      "name": "Cross-Lane Mixing",
+      "p_value": 1.0,
+      "passed": true,
+      "detail": "lanes_changed=8/8"
+    },
+    {
+      "name": "Weak Inputs",
+      "p_value": 1.0,
+      "passed": true,
+      "detail": "unique_hashes=5/5"
+    },
+    {
+      "name": "Frequency (Monobit)",
+      "p_value": 0.4133422400315896,
+      "passed": true,
+      "detail": "proportion_1=0.5004"
+    },
+    {
+      "name": "Runs",
+      "p_value": 0.6402521108852783,
+      "passed": true,
+      "detail": "runs=499734, mu=499967.7"
+    },
+    {
+      "name": "Serial Test (m=4)",
+      "p_value": 0.015619389942672283,
+      "passed": true,
+      "detail": "chi2=8.32, patterns=16/16"
+    },
+    {
+      "name": "Avalanche (SAC)",
+      "p_value": 0.7324101406666512,
+      "passed": true,
+      "detail": "avg_diff_bits=255.9/512 (49.98%)",
+      "metric": 0.4998310546875
+    },
+    {
+      "name": "Diffusion",
+      "p_value": 0.49995233154296875,
+      "passed": true,
+      "detail": "avg_changed_bits=256.0/512 (50.00%)",
+      "metric": 0.49995233154296875
+    },
+    {
+      "name": "Collision (32-bit trunc.)",
+      "p_value": 1.0,
+      "passed": true,
+      "detail": "collisions=1, theoretical_prob≈0.2525"
+    }
+  ],
+  "summary": {
+    "passed": 9,
+    "total": 9
+  }
+}

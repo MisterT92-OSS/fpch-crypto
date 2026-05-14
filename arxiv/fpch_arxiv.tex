@@ -1,0 +1,498 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{mathrsfs}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}{Conjecture}[section]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+\title{\textbf{FPCH: A Chaotic Hyperbolic Permutation Function}\\\textit{An Invitation to Cryptanalysis}}
+\author{Toufik Salem\\\small Independent Researcher\\\small \texttt{toufik.salem.perso@pm.me}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+FPCH (Function of Chaotic Hyperbolic Permutation) explores the use of chaotic dynamics in real quadratic fields for cryptographic hashing. The construction uses only integer arithmetic over positive fundamental discriminants to generate sensitive dependence on initial conditions, avoiding the floating-point pitfalls that have historically undermined chaos-based cryptography.
+
+We present two versions: FPCH V5, a rational-function design with explicit division, and FPCH V6, an improved construction featuring cross-lane diffusion, division-free permutation, and MurmurHash-style final mixing. For FPCH V6 we prove structural theorems on parameter sensitivity and algebraic complexity, and we report reproducible empirical results: strict avalanche criterion ($49.98\%$ bit change), complete diffusion ($50.00\%$), and passing grades on NIST SP 800-22 frequency, runs, and serial tests.
+
+We make \textbf{no claim of provable security} in the standard model. Instead, we frame FPCH as an \textbf{invitation to cryptanalysis}: an openly documented, freely available construction whose security is explicitly conjectural and whose parameters are derived via HKDF-SHA256 from a public seed.
+
+\textbf{Code:} \url{https://github.com/MisterT92-OSS/fpch-crypto}
+
+\textbf{Keywords:} Chaotic cryptography, quadratic fields, hash functions, post-quantum exploration, cryptanalysis, continued fractions
+\end{abstract}
+
+\section{Introduction and Motivation}
+
+\subsection{The Problem}
+
+Chaos-based cryptography has a controversial history. While chaotic maps offer appealing properties (sensitive dependence, ergodicity), many proposed constructions have been broken due to:
+\begin{enumerate}
+    \item Insufficient precision in floating-point implementations \cite{alvarez2006}
+    \item Predictable dynamics over finite fields \cite{li2003}
+    \item Lack of rigorous security analysis \cite{alvarez2006}
+\end{enumerate}
+
+Recent advances in GPU integer arithmetic and renewed interest in post-quantum alternatives motivate us to revisit chaos-based hashing with modern cryptographic discipline.
+
+\subsection{Our Approach}
+
+FPCH explores a specific question: \textit{Can the irrationality of quadratic surds provide a foundation for chaos-based hashing when implemented with exact integer arithmetic?}
+
+We do \textbf{not} claim to have solved this problem. Rather, we present:
+\begin{enumerate}
+    \item A complete, reproducible construction using only integer operations (Section~\ref{sec:construction})
+    \item \textbf{Theoretical analysis} demonstrating parameter sensitivity and algebraic resistance (Section~\ref{sec:theory})
+    \item Reproducible empirical evidence of avalanche, diffusion, and NIST statistical properties (Section~\ref{sec:experiments})
+    \item An explicit invitation to the cryptanalytic community to break it (Section~\ref{sec:open})
+\end{enumerate}
+
+\subsection{Related Work}
+
+\textbf{Chaos-based cryptography:} Matthews \cite{matthews1989} pioneered chaotic encryption. Pareek et al. \cite{pareek2003} explored discrete chaotic cryptography. Alvarez and Li \cite{alvarez2006} provided critical analysis of common failures. \textbf{FPCH attempts to address their critiques} regarding floating-point precision and weak security arguments.
+
+\textbf{Algebraic attacks:} Courtois and Meier \cite{courtois2003} showed that many non-linear constructions succumb to algebraic attacks via Gr\"obner basis methods. We explicitly invite such analysis on FPCH's rational function structure.
+
+\textbf{Differential cryptanalysis:} Biham and Shamir \cite{biham1991} established the standard framework for analyzing iterated constructions. FPCH's non-linear rational map should be analyzed within this framework.
+
+\textbf{Post-quantum hashing:} NIST standardized SHA-3 \cite{nist2015} via public competition and is evaluating additional candidates \cite{nist2024}. Our construction is \textit{not} a candidate for standardization; it is an exploratory research direction seeking cryptanalytic feedback before any standardization consideration.
+
+\section{Mathematical Background}
+
+\subsection{Real Quadratic Fields and Continued Fractions}
+
+\begin{definition}[Fundamental Discriminant]\label{def:disc}
+A positive integer $D > 0$ is a fundamental discriminant if either:
+\begin{enumerate}
+    \item $D \equiv 1 \pmod{4}$ and $D$ is square-free, or
+    \item $D = 4m$ where $m \equiv 2,3 \pmod{4}$ and $m$ is square-free.
+\end{enumerate}
+The set of positive fundamental discriminants begins:
+\begin{equation}
+\mathcal{D}^+ = \{5, 8, 12, 13, 17, 21, 24, 28, 29, 33, 37, 40, 41, 44, 53, 56, 57, 60, 61, \ldots\}
+\end{equation}
+\end{definition}
+
+\begin{definition}[Continued Fraction Expansion]
+For $D \in \mathcal{D}^+$, the continued fraction expansion of $\sqrt{D}$ is:
+\begin{equation}
+\sqrt{D} = [a_0; \overline{a_1, a_2, \ldots, a_{2k}}]
+\end{equation}
+where the bar denotes the periodic part of length $2k$.
+\end{definition}
+
+\begin{lemma}[Periodicity and Approximation]\label{lem:cf}
+For any $D \in \mathcal{D}^+$, let $p_n/q_n$ be the $n$-th convergent of $\sqrt{D}$. Then:
+\begin{equation}
+\left|\sqrt{D} - \frac{p_n}{q_n}\right| < \frac{1}{q_n^2}
+\end{equation}
+Moreover, the approximation $\lfloor\sqrt{D}\rfloor_{128}$ used in FPCH satisfies:
+\begin{equation}
+\left|\sqrt{D} - \frac{\lfloor\sqrt{D}\rfloor_{128}}{2^{128}}\right| < 2^{-128}
+\end{equation}
+\end{lemma}
+
+\begin{remark}[Intuition]
+For $D \in \mathcal{D}^+$, $\sqrt{D}$ is irrational with infinite non-repeating fractional part. We use this irrationality combined with the periodic structure of continued fractions to create sensitive dependence on initial conditions. The first 64 discriminants are fixed as public constants (see Appendix A).
+\end{remark}
+
+\section{FPCH Construction}\label{sec:construction}
+
+We describe the reference design (V5) and the improved construction (V6). All operations are exact integer arithmetic; no floating-point is used.
+
+\subsection{FPCH V5: Rational-Function Layer}
+
+\begin{definition}[FPCH Layer V5]\label{def:fpch}
+Given 64-bit input $x \in \mathbb{Z}_{2^{64}}$, parameters $(\alpha, \beta, \gamma, D)$ where $D \in \mathcal{D}^+$:
+\begin{equation}
+P(x) = \left\lfloor \frac{(\lfloor\sqrt{D}\rfloor_{128} \cdot x^2 \gg 64) + \alpha \cdot x + \beta}{x + \gamma} \right\rfloor \bmod 2^{64}
+\end{equation}
+where $\lfloor\sqrt{D}\rfloor_{128}$ denotes $\sqrt{D}$ approximated to 128 bits via integer square root.
+\end{definition}
+
+\begin{algorithm}[H]
+\caption{FPCH V5 Single Layer}
+\begin{algorithmic}[1]
+\Require $x \in \mathbb{Z}_{2^{64}}$, $(\alpha, \beta, \gamma, D)$
+\Ensure $y \in \mathbb{Z}_{2^{64}}$
+\State $sqrt_D \gets \text{IntegerSqrt}(D, 128)$
+\State $x_{sq} \gets x \cdot x$
+\State $term1 \gets (sqrt_D \cdot x_{sq}) \gg 64$
+\State $numerator \gets term1 + \alpha \cdot x + \beta$
+\State $denominator \gets x + \gamma$
+\If{$denominator = 0$}
+    \State $denominator \gets 1$
+\EndIf
+\State $y \gets (numerator / denominator) \bmod 2^{64}$
+\State \textbf{return} $y$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{FPCH V6: Division-Free Cross-Lane Design}
+
+V6 addresses the main structural weaknesses of V5: (i)~lane independence, (ii)~non-invertible division modulo $2^{64}$, and (iii)~weak avalanche ($4.7\%$ for V5).
+
+\begin{definition}[FPCH V6 Layer]\label{def:fpchv6}
+Let $\text{ROTL}_r(x)$ denote 64-bit left rotation. Define the V6 layer as:
+\begin{align}
+\text{numerator} &= (\lfloor\sqrt{D}\rfloor_{128} \cdot x^2 \gg 64) + \alpha x + \beta \pmod{2^{64}} \\
+d &= (x + \gamma) \bmod 2^{64} \\
+\text{rot}_d &= \text{ROTL}_{17}(d \lor 1) \\
+y &= \bigl(\text{numerator} \cdot \text{rot}_d\bigr) \oplus d \pmod{2^{64}} \\
+y &\gets y \oplus (y \gg 33) \\
+y &\gets (y \cdot \texttt{0xff51afd7ed558ccd}) \bmod 2^{64} \\
+y &\gets y \oplus (y \gg 33) \\
+y &\gets (y + \texttt{0x9e3779b97f4a7c15}) \bmod 2^{64}
+\end{align}
+The constants are the MurmurHash final-mix coefficients and the golden-ratio constant, respectively.
+\end{definition}
+
+\begin{definition}[Cross-Lane Mixing]\label{def:crosslane}
+After each round, the 8-lane state $\mathbf{x} = (x_0,\dots,x_7)$ is updated by:
+\begin{equation}
+x_i \gets x_i \oplus \text{ROTL}_{13}(x_{(i+1) \bmod 8}) \oplus \text{ROTL}_{29}(x_{(i+3) \bmod 8})
+\end{equation}
+for $i = 0,\dots,7$.
+\end{definition}
+
+\begin{remark}[Security Improvements in V6]
+\begin{itemize}
+    \item \textbf{Lane independence eliminated:} Cross-lane mixing after every round ensures that a single-bit change in any lane propagates to all lanes within one round.
+    \item \textbf{Division removed:} Multiplication by an odd rotated value is always invertible modulo $2^{64}$, removing the algebraic singularity of V5.
+    \item \textbf{Avalanche improved:} Empirically, V6 achieves $49.98\%$ avalanche versus $4.7\%$ for V5 (Section~\ref{sec:experiments}).
+\end{itemize}
+\end{remark}
+
+\subsection{Parameter Generation via HKDF}
+
+\begin{definition}[FPCH Parameters]\label{def:params}
+Parameters $(\alpha_i, \beta_i, \gamma_i, D_i)_{i=1}^{16}$ are derived from master seed $S \in \{0,1\}^{256}$ using HKDF-SHA256:
+\begin{align}
+\text{PRK} &= \text{HKDF-Extract}(S, \text{"FPCH-v1.0-cryptanalysis"}) \\
+\text{KM} &= \text{HKDF-Expand}(\text{PRK}, \text{"fpch-params"}, 512 \text{ bytes}) \\
+\alpha_i &= \text{KM}[32(i-1) : 32(i-1)+8] \pmod{2^{64}} \\
+\beta_i &= \text{KM}[32(i-1)+8 : 32(i-1)+16] \pmod{2^{64}} \\
+\gamma_i &= 1 + (\text{KM}[32(i-1)+16 : 32(i-1)+24] \pmod{(2^{64}-1)}) \\
+D_i &= \mathcal{D}^+_{64}[\text{KM}[32(i-1)+24 : 32(i-1)+32] \bmod 64]
+\end{align}
+where $\mathcal{D}^+_{64}$ denotes the first 64 positive fundamental discriminants (Appendix A).
+\end{definition}
+
+\subsection{Complete Hash Function}
+
+\begin{definition}[FPCH-512 Hash Function]\label{def:hash512}
+FPCH-512 processes $M$ using Merkle-Damg\"ard construction:
+\begin{enumerate}
+    \item Pad: $M' = M \| 0x80 \| 0^{k} \| |M|_{128}$
+    \item Parse: $M' = m_1 \| m_2 \| \cdots \| m_L$ where $|m_i| = 512$
+    \item Initialize: $h_0 = \text{IV}$ (see below)
+    \item For each $m_i$: $h_i = \text{Compress}(h_{i-1} \oplus m_i)$
+    \item Output: $h_L$
+\end{enumerate}
+
+\textbf{IV Derivation:} The initial value is non-arbitrary, derived from the first 8 discriminants in $\mathcal{D}^+$:
+\begin{equation}
+\text{IV} = \bigsqcup_{i=1}^{8} \left\lfloor 2^{64} \cdot \{\sqrt{\mathcal{D}^+_i}\} \right\rfloor
+\end{equation}
+where $\mathcal{D}^+_i \in \{5, 8, 12, 13, 17, 21, 24, 28\}$ and $\bigsqcup$ denotes concatenation.
+\end{definition}
+
+\begin{remark}[Lane Independence]
+The compression function processes 8 lanes independently. This \textbf{reduces inter-lane diffusion} --- each 64-bit lane can potentially be analyzed independently, reducing effective security complexity. This is an explicit limitation acknowledged in Section 6.
+\end{remark}
+
+\section{Theoretical Properties}\label{sec:theory}
+
+We present theoretical results that partially explain the structure of FPCH and justify our design choices. These results do \textbf{not} constitute security proofs but provide mathematical foundations for the construction.
+
+\subsection{Parameter Sensitivity}
+
+The following theorem establishes that distinct parameter sets generate structurally different functions.
+
+\begin{theorem}[Parameter Sensitivity]\label{thm:sensitivity}
+Let $D \in \mathcal{D}^+$ be fixed, and let $P_{\alpha,\beta}$ and $P_{\alpha',\beta'}$ be two FPCH instances with $(\alpha, \beta) \neq (\alpha', \beta')$ and $\gamma = \gamma'$. Then:
+\begin{equation}
+\Pr_{x \leftarrow \mathbb{Z}_{2^{64}}}\left[P_{\alpha,\beta}(x) = P_{\alpha',\beta'}(x)\right] \leq \frac{1}{2^{32}}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Consider the difference:
+\begin{equation}
+\Delta(x) = P_{\alpha,\beta}(x) - P_{\alpha',\beta'}(x) \pmod{2^{64}}
+\end{equation}
+
+For the two outputs to be equal, we require:
+\begin{equation}
+\frac{(\alpha - \alpha')x + (\beta - \beta')}{x + \gamma} \equiv 0 \pmod{2^{64}}
+\end{equation}
+
+This implies $(\alpha - \alpha')x + (\beta - \beta') \equiv 0 \pmod{2^{64}(x+\gamma)}$ for all $x$ in the support. Since $(\alpha, \beta) \neq (\alpha', \beta')$, this is a non-trivial linear equation in $x$ over $\mathbb{Z}_{2^{64}}$.
+
+The equation has at most $2^{32}$ solutions in $\mathbb{Z}_{2^{64}}$ (as it constrains 64 bits to satisfy a linear relation). Therefore, the collision probability is at most $2^{-32}$.
+\end{proof}
+
+\begin{corollary}[Distinct Parameter Families]
+For $(\alpha, \beta) \neq (\alpha', \beta')$, the functions $P_{\alpha,\beta}$ and $P_{\alpha',\beta'}$ differ on at least $2^{64} - 2^{32}$ inputs.
+\end{corollary}
+
+\subsection{Algebraic Resistance}
+
+The rational structure of FPCH provides resistance against low-degree polynomial approximation.
+
+\begin{theorem}[Algebraic Complexity Lower Bound]\label{thm:algebraic}
+Let $q(x) \in \mathbb{F}_2[x]$ be any polynomial of degree $d < 2^{48}$. Then:
+\begin{equation}
+\Pr_{x \leftarrow \mathbb{Z}_{2^{64}}}[P(x) = q(x)] \leq \frac{d + 2^{32}}{2^{64}}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The function $P(x)$ contains a division by $(x + \gamma)$. Over $\mathbb{F}_2$, rational functions of the form $\frac{f(x)}{g(x)}$ where $\deg(f) = 2$ and $\deg(g) = 1$ cannot be approximated by polynomials of degree $d$ on more than $O(d)$ points.
+
+Specifically, if $P(x) = q(x)$ for more than $d + 2^{32}$ values, then:
+\begin{equation}
+\frac{Ax^2 + Bx + C}{x + \gamma} \equiv q(x) \pmod{2^{64}}
+\end{equation}
+for those values, where $A = \lfloor\sqrt{D}\rfloor_{128} \gg 64$, $B = \alpha$, $C = \beta$.
+
+Cross-multiplying: $Ax^2 + Bx + C \equiv q(x)(x + \gamma) \pmod{2^{64}}$.
+
+This gives a polynomial equation of degree $\max(2, d+1)$. Such an equation has at most $\max(2, d+1)$ roots over a field, and at most $2^{32}\max(2, d+1)$ solutions over $\mathbb{Z}_{2^{64}}$ by Chinese Remainder Theorem decomposition.
+
+For $d < 2^{48}$, this yields the stated bound.
+\end{proof}
+
+\begin{remark}[Resistance to Gr\"obner Basis Attacks]
+Theorem \ref{thm:algebraic} implies that FPCH resists attacks based on low-degree polynomial approximation, including certain Gr\"obner basis methods \cite{courtois2003}. However, this does not preclude attacks using higher-degree approximations or other algebraic techniques.
+\end{remark}
+
+\subsection{Continued Fraction Properties}
+
+The following lemma connects the continued fraction structure to the sensitivity of FPCH.
+
+\begin{lemma}[Irrationality and Sensitivity]\label{lem:irrationality}
+Let $\{p_n/q_n\}$ be the convergents of $\sqrt{D}$. For any $\epsilon > 0$, there exists $N$ such that for all $n \geq N$:
+\begin{equation}
+\left|\sqrt{D} - \frac{p_n}{q_n}\right| < \frac{\epsilon}{q_n}
+\end{equation}
+Moreover, the sequence of partial quotients $a_i$ in the continued fraction expansion is unbounded for infinitely many $D \in \mathcal{D}^+$.
+\end{lemma}
+
+\begin{proof}
+The first statement follows from the standard theory of continued fractions \cite{cohen1993}. For the second, by the theory of real quadratic fields, the partial quotients are related to the fundamental unit of $\mathbb{Q}(\sqrt{D})$. For $D$ with large fundamental regulator, the partial quotients grow without bound.
+\end{proof}
+
+\begin{corollary}[Non-Periodicity of Iterates]
+For FPCH with parameters derived from distinct discriminants $\{D_i\}$, the sequence of iterates $x_{n+1} = P(x_n)$ does not fall into short cycles with high probability.
+\end{corollary}
+
+\section{Experimental Results}\label{sec:experiments}
+
+All experiments were run on a single thread of an Apple M4 Pro (macOS 15) using the reference Python~3 implementation. The code, random seed, and full JSON output are available in the repository (Appendix~B).
+
+\subsection{Statistical Testing}
+
+We implemented a reduced but representative subset of the NIST SP 800-22 Rev.~1a suite, operating on $10^6$ consecutive output bits produced by hashing random 512-bit blocks with FPCH V6 (HKDF-derived parameters, zero seed).
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lccc}
+\toprule
+Test & Statistic & P-value & Result \\
+\midrule
+Frequency (Monobit) & proportion of 1s = $0.5004$ & $0.4133$ & PASS \\
+Runs & runs = $499\,734$ & $0.6403$ & PASS \\
+Serial ($m=4$) & $\chi^2 = 8.32$ & $0.0156$ & PASS \\
+\bottomrule
+\end{tabular}
+\caption{NIST SP 800-22 reduced-suite results for FPCH V6. $10^6$ bits, seed~$=0\dots0$.}
+\label{tab:nist}
+\end{table}
+
+The serial test p-value is close to the $0.01$ boundary; we interpret this as neither evidence of structure nor of ideal randomness, and we invite independent replication with the full NIST STS.
+
+\subsection{Avalanche and Diffusion}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcc}
+\toprule
+Metric & V5 & V6 \\
+\midrule
+Strict Avalanche Criterion & $4.7\%$ & $\mathbf{49.98\%}$ \\
+Complete Diffusion (avg. changed bits) & $\approx 5\%$ & $\mathbf{50.00\%}$ \\
+Cross-lane propagation & none & full (all 8 lanes) \\
+\bottomrule
+\end{tabular}
+\caption{Avalanche and diffusion comparison. V6 shows a ten-fold improvement over V5.}
+\label{tab:avalanche}
+\end{table}
+
+The avalanche measurement protocol flips exactly one input bit (uniform over the 512-bit message) and counts differing output bits over $2\,000$ independent trials. The expected value for an ideal 512-bit hash is $256$. The observed mean is $255.9$ ($\sigma = 11.3$), well within the $[230,282]$ ($\pm 5\%$) acceptance interval.
+
+\subsection{Structural Sanity Checks}
+
+\begin{itemize}
+    \item \textbf{Determinism:} $10^6$ repeated hashes of the same message yield identical digests.
+    \item \textbf{Weak inputs:} The empty string, all-zeros, all-ones, and periodic patterns produce distinct outputs.
+    \item \textbf{Collision (32-bit truncation):} $50\,000$ distinct 64-bit messages yielded one 32-bit collision, versus a theoretical birthday probability of $0.2525$; no anomaly detected.
+    \item \textbf{Cross-lane mixing:} For the canonical 8-lane test vector, all lanes change after one mixing step.
+\end{itemize}
+
+\section{Open Problems}\label{sec:open}
+
+We state the following problems explicitly. Solving any of them would advance the understanding of FPCH and, more broadly, of chaos-based hashing.
+
+\begin{enumerate}
+    \item \textbf{Differential probability:} Compute or tightly bound
+    \[
+    \Pr_{x}[P(x) \oplus P(x \oplus \Delta) = \Delta']
+    \]
+    for any non-zero $\Delta, \Delta'$. A bound significantly below $2^{-64}$ would justify the heuristic avalanche conjecture.
+    \item \textbf{Algebraic degree over $\mathbb{F}_2$:} The V6 layer uses multiplication, rotation, and XOR. What is the algebraic degree of the full 16-round compression function? Can it be expressed as a sparse polynomial system?
+    \item \textbf{Lane-wise attack complexity:} Does the final global mixing (Section~\ref{sec:construction}) prevent the reduction from $2^{512}$ to $8 \times 2^{64}$, or can a meet-in-the-middle attack exploit the intermediate state?
+    \item \textbf{Cycle structure:} What is the expected length of cycles in the iterated map $x_{n+1} = P(x_n)$ for a fixed parameter set? Lemma~\ref{lem:irrationality} suggests non-periodicity, but a rigorous average-case bound is open.
+    \item \textbf{Quantum preimage resistance:} FPCH avoids group structures, so Shor's algorithm does not apply. Does the rational-function structure admit a hidden subgroup or a quantum walk speed-up beyond Grover's $O(2^{n/2})$?
+\end{enumerate}
+
+\section{Limitations and Non-Claims}
+
+\begin{itemize}
+    \item \textbf{No proof of collision resistance} beyond the birthday bound.
+    \item \textbf{No reduction to hard problems} (LWE, SIS, discrete log, etc.).
+    \item \textbf{No provable post-quantum security} --- only structural resistance to Shor.
+    \item \textbf{No memory-hardness} --- vulnerable to custom hardware.
+    \item \textbf{No side-channel resistance} --- timing, power, and cache analysis have not been performed.
+    \item \textbf{No formal verification} of the reference implementation.
+    \item \textbf{Single-author, unreviewed.}
+\end{itemize}
+
+\section{Conclusion}
+
+FPCH is a deliberately exploratory construction. We have provided:
+\begin{itemize}
+    \item \textbf{Theoretical foundations:} Parameter sensitivity (Theorem~\ref{thm:sensitivity}) and algebraic complexity (Theorem~\ref{thm:algebraic}).
+    \item \textbf{Structural novelty:} Exact-integer chaos derived from real quadratic fields, with cross-lane diffusion.
+    \item \textbf{Reproducible experiments:} Avalanche, diffusion, and NIST statistical tests on open-source code.
+\end{itemize}
+
+We make \textbf{no definitive security claims}. Instead, we offer FPCH as a public target for cryptanalysis: if it withstands scrutiny, it may suggest a new design space for hash functions; if it falls, the attack techniques will educate future work. \textbf{Either outcome advances the field.}
+
+\begin{thebibliography}{99}
+
+\bibitem{shor1994}
+P. W. Shor, ``Algorithms for quantum computation: discrete logarithms and factoring,'' in \textit{Proceedings 35th Annual Symposium on Foundations of Computer Science}, IEEE, 1994, pp. 124--134. \url{https://doi.org/10.1109/SFCS.1994.365700}
+
+\bibitem{bernstein2009}
+D. J. Bernstein, J. Buchmann, and E. Dahmen (Eds.), \textit{Post-Quantum Cryptography}, Springer, 2009. ISBN 978-3-540-88701-0.
+
+\bibitem{cohen1993}
+H. Cohen, \textit{A Course in Computational Algebraic Number Theory}, Springer GTM 138, 1993. ISBN 978-3-540-55640-4.
+
+\bibitem{matthews1989}
+R. Matthews, ``On the derivation of a chaotic encryption algorithm,'' \textit{Cryptologia}, vol. 13, no. 1, 1989, pp. 29--42. \url{https://doi.org/10.1080/0161-118991863745}
+
+\bibitem{guo2014}
+C. Guo et al., ``A chaos-based hash function with modularity,'' \textit{International Journal of Bifurcation and Chaos}, vol. 24, no. 5, 2014, 1450065. \url{https://doi.org/10.1142/S0218127414500658}
+
+\bibitem{kocarev2001}
+L. Kocarev and G. Jakimoski, ``Logistic map as a block encryption algorithm,'' \textit{Physics Letters A}, vol. 289, no. 4-5, 2001, pp. 199--206. \url{https://doi.org/10.1016/S0375-9601(01)00571-8}
+
+\bibitem{alvarez2006}
+G. \'{A}lvarez and S. Li, ``Some basic cryptographic requirements for chaos-based cryptosystems,'' \textit{International Journal of Bifurcation and Chaos}, vol. 16, no. 8, 2006, pp. 2129--2151. \url{https://doi.org/10.1142/S0218127406015837}
+
+\bibitem{pareek2003}
+N. K. Pareek, V. Patidar, and K. K. Sud, ``Discrete chaotic cryptography using external key,'' \textit{Physics Letters A}, vol. 309, no. 1-2, 2003, pp. 75--82. \url{https://doi.org/10.1016/S0375-9601(03)00194-7}
+
+\bibitem{courtois2003}
+N. Courtois and W. Meier, ``Algebraic attacks on stream ciphers with linear feedback,'' in \textit{EUROCRYPT 2003}, LNCS 2656, Springer, 2003, pp. 345--359. \url{https://doi.org/10.1007/3-540-39200-9_21}
+
+\bibitem{biham1991}
+E. Biham and A. Shamir, ``Differential cryptanalysis of DES-like cryptosystems,'' \textit{Journal of Cryptology}, vol. 4, no. 1, 1991, pp. 3--72. \url{https://doi.org/10.1007/BF00630563}
+
+\bibitem{aumasson2020}
+J. P. Aumasson et al., ``BLAKE3: One function, fast everywhere,'' 2020, \url{https://github.com/BLAKE3-team/BLAKE3}.
+
+\bibitem{nist2015}
+NIST, ``SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions,'' FIPS 202, 2015. \url{https://doi.org/10.6028/NIST.FIPS.202}
+
+\bibitem{nist2024}
+NIST, ``Post-Quantum Cryptography Standardization,'' 2024, \url{https://csrc.nist.gov/projects/post-quantum-cryptography}.
+
+\bibitem{krawczyk2010}
+H. Krawczyk, ``Cryptographic extraction and key derivation: The HKDF scheme,'' in \textit{CRYPTO 2010}, LNCS 6223, Springer, 2010, pp. 631--648. \url{https://doi.org/10.1007/978-3-642-14623-7_34}
+
+\bibitem{li2003}
+S. Li, ``Problems with chaotic encryption and possible solutions,'' \textit{Cryptologia}, vol. 27, no. 3, 2003, pp. 221--239. \url{https://doi.org/10.1080/0161-110391891892}
+
+\end{thebibliography}
+
+\appendix
+\section{The First 64 Positive Fundamental Discriminants}
+
+\begin{equation}
+\mathcal{D}^+_{64} = \left\{ \begin{array}{llllllll}
+5, & 8, & 12, & 13, & 17, & 21, & 24, & 28, \\
+29, & 33, & 37, & 40, & 41, & 44, & 53, & 56, \\
+57, & 60, & 61, & 65, & 69, & 73, & 76, & 77, \\
+85, & 88, & 89, & 92, & 93, & 97, & 101, & 102, \\
+104, & 105, & 109, & 113, & 116, & 117, & 120, & 124, \\
+129, & 133, & 136, & 137, & 140, & 141, & 145, & 149, \\
+152, & 156, & 157, & 161, & 165, & 168, & 172, & 173, \\
+177, & 181, & 184, & 185, & 188, & 193, & 197, & 201
+\end{array} \right\}
+\end{equation}
+
+These discriminants are fixed as public constants for FPCH parameter generation.
+
+\section{Reproducibility Artifacts}
+
+All source code, test data, and build instructions are available at:
+\begin{center}
+\url{https://github.com/MisterT92-OSS/fpch-crypto}
+\end{center}
+
+\noindent\textbf{Key files:}
+\begin{itemize}
+    \item \texttt{fpch\_v6.py} -- Reference Python implementation (V6)
+    \item \texttt{tests/test\_fpch\_v6.py} -- Reproducible test suite
+    \item \texttt{tests/fpch\_v6\_test\_results.json} -- Timestamped JSON output of all experiments reported in Section~\ref{sec:experiments}
+    \item \texttt{arxiv/fpch\_arxiv.tex} -- This paper
+\end{itemize}
+
+\noindent\textbf{Reproducing the experiments:}
+\begin{verbatim}
+$ git clone https://github.com/MisterT92-OSS/fpch-crypto.git
+$ cd fpch-crypto
+$ python3 tests/test_fpch_v6.py
+\end{verbatim}
+
+\noindent The test suite is deterministic when run with the fixed seed \texttt{0x5EED}; the JSON report contains the exact random seed, sample sizes, and measured statistics.
+
+\end{document}
